@@ -2090,7 +2090,7 @@ meter_widths:
         db $07,$04,$FF,$FF,$FF,$FF,$FF,$FF
         db $02,$FF,$FF,$FF,$FF,$FF,$FF,$FF
         db $02,$FF,$FF,$FF,$FF,$FF,$FF,$FF
-        db $08,$08,$08,$FF,$FF,$FF,$FF,$FF
+        db $0B,$0B,$0B,$FF,$FF,$FF,$FF,$FF
 meter_heights:
         db $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
         db $04,$FF,$FF,$FF,$FF,$FF,$FF,$FF
@@ -2388,7 +2388,7 @@ draw_edited_status_bar:
         dw .edited_movie_recording
         dw .edited_memory_7e
         dw .edited_memory_7f
-        dw .edited_rtc
+        dw .edited_attempt
         
     .edited_item_box:
         LDA $03
@@ -2905,29 +2905,11 @@ draw_edited_status_bar:
         STA [$00],Y
         RTS
         
-    .edited_rtc:
-        LDA #$3801
+    .edited_attempt:
+        LDA #$2808
         STA [$00],Y
         INY #2
-        LDA #$3802
-        STA [$00],Y
-        INY #2
-        LDA #$3878
-        STA [$00],Y
-        INY #2
-        LDA #$3803
-        STA [$00],Y
-        INY #2
-        LDA #$3804
-        STA [$00],Y
-        INY #2
-        LDA #$3878
-        STA [$00],Y
-        INY #2
-        LDA #$3805
-        STA [$00],Y
-        INY #2
-        LDA #$3806
+        LDA #$2800
         STA [$00],Y
         RTS
 

@@ -58,6 +58,11 @@
 !restore_room_dragoncoins    = $19F5
 !restore_room_tide           = $19F6
 
+; attempt count
+!attempt_count               = $0DDB
+!completion_count            = $0DDC
+!best_streaks_count          = $0DDD
+
 ; determines when to load state from different level
 !load_state_timer            = $0EF9
 !load_state_delay            = $40

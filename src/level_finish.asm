@@ -9,7 +9,11 @@ level_finish:
         LDA #$01
         STA !freeze_timer_flag
         STA !level_finished
-        JSL set_time_save_address
+        INC !completion_count
+        LDA !spliced_run
+        CMP #$00
+        BNE +
+      + JSL set_time_save_address
         JSL add_additional_time
         
         PLP

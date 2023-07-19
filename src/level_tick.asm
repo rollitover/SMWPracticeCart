@@ -51,6 +51,7 @@ level_tick:
         JSR test_run_type
         JSR test_translevel_0_failsafe
         JSR wait_slowdown
+        JSR reset_attempt_count
         
     .done:
         PLB
@@ -173,7 +174,7 @@ display_meters:
         dw meter_movie_recording
         dw meter_memory_7e
         dw meter_memory_7f
-        dw meter_rtc
+        dw meter_attempts
     
     .meter_fade:
         dw .nothing
@@ -195,7 +196,7 @@ display_meters:
         dw .nothing
         dw meter_memory_7e
         dw meter_memory_7f
-        dw meter_rtc
+        dw meter_attempts
 
 ; draw the item box meter (fixed position)
 meter_item_box:
@@ -1005,86 +1006,135 @@ rtc_unsupported_string:
         db $0D,$1D,$1B,$19,$1E,$1C,$17,$1E
 
 ; draw the real time clock meter
-meter_rtc:
+meter_attempts:
         LDA [!statusbar_layout_ptr],Y
-        BNE +
-        JMP .uptime
-        
-      + LDA.L !clock_available
-        CMP #$BD
-        BEQ .wait
-        
-    .uptime: ; temp label
-        LDX #$07
-      - LDA rtc_unsupported_string,X
-        STA $03,X
-        DEX
-        BPL -
-        BRA .draw
-    
-    .wait:
-        LDA.L $802800 ; clock dummy read
-        AND #$0F
-        CMP #$0F
-        BNE .wait
-        
-        LDA #$0D
-        STA.L $802801 ; clock latch
-        LDA.L $802800 ; clock dummy read
-        LDA.L $802800 ; clock seconds 1s
-        AND #$0F
-        STA $03
-        LDA.L $802800 ; clock seconds 10s
-        AND #$0F
-        STA $04
-        LDA.L $802800 ; clock minutes 1s
-        AND #$0F
-        STA $06
-        LDA.L $802800 ; clock minutes 10s
-        AND #$0F
-        STA $07
-        LDA.L $802800 ; clock hours 1s
-        AND #$0F
-        STA $09
-        LDA.L $802800 ; clock hours 10s
-        AND #$0F
-        STA $0A
-        LDA #$78
-        STA $05
-        STA $08
-        
-        LDA [!statusbar_layout_ptr],Y
-        CMP #$01
-        BEQ .draw
-        
-        LDA #$00
-        LDX $0A
-      - BEQ +
-        CLC
-        ADC #$0A
-        DEX
-        BRA -
-      + CLC
-        ADC $09
-        CMP #$0C
-        BCC .draw
-        SEC
-        SBC #$0C
-        JSL !_F+$00974C ; hex2dec
-        STX $0A
-        STA $09
-        
-    .draw:
-        LDX #$07
-      - LDA $03,X
+        ASL A
+        TAX
+        JMP (.attempt_type,X)
+
+    .attempt_type:
+        dw .total
+        dw .best
+        dw .complete
+
+
+    .total:
+        LDA #$0A
         STA [$00]
         INC $00
-        DEX
-        BPL -
-        BRA .done
+        LDA #$1D
+        STA [$00]
+        INC $00
+        LDA #$1D
+        STA [$00]
+        INC $00
+        LDA #$0E
+        STA [$00]
+        INC $00
+        LDA #$16
+        STA [$00]
+        INC $00
+        LDA #$19
+        STA [$00]
+        INC $00
+        LDA #$1D
+        STA [$00]
+        INC $00
+        LDA #$1C
+        STA [$00]
+        INC $00
+        LDA #$78 ; :
+        STA [$00]
+        INC $00        
+        LDA !attempt_count ; mario speed
+      + JSL !_F+$00974C ; hex2dec
+        PHA
+        TXA
+        STA [$00]
+        INC $00
+        PLA
+        STA [$00]
         
-    .done:
         RTS
+
+    .best:
+        LDA #$1C ; s
+        STA [$00]
+        INC $00
+        LDA #$1D ; t
+        STA [$00]
+        INC $00
+        LDA #$1B ; r
+        STA [$00]
+        INC $00
+        LDA #$0E ; e
+        STA [$00]
+        INC $00
+        LDA #$0A ; a
+        STA [$00]
+        INC $00
+        LDA #$14 ; k
+        STA [$00]
+        INC $00
+        LDA #$1C ; s
+        STA [$00]
+        INC $00
+        LDA #$78 ; :
+        STA [$00]
+        INC $00
+        LDA !best_streaks_count ; mario speed
+      + JSL !_F+$00974C ; hex2dec
+        PHA
+        TXA
+        BNE +
+        LDA #$FC
+      + STA [$00]
+        INC $00
+        PLA
+        STA [$00]
+        RTS
+
+    .complete:
+        LDA #$0C ; c
+        STA [$00]
+        INC $00
+        LDA #$18 ; o
+        STA [$00]
+        INC $00
+        LDA #$16 ; m
+        STA [$00]
+        INC $00
+        LDA #$19 ; p
+        STA [$00]
+        INC $00
+        LDA #$15 ; l
+        STA [$00]
+        INC $00
+        LDA #$0E ; e
+        STA [$00]
+        INC $00
+        LDA #$1D ; t
+        STA [$00]
+        INC $00
+        LDA #$0E ; e 
+        STA [$00]
+        INC $00
+        LDA #$78 ; :
+        STA [$00]
+        INC $00        
+        LDA !completion_count ; mario speed
+      + JSL !_F+$00974C ; hex2dec
+        PHA
+        TXA
+        BNE +
+        LDA #$FC
+      + STA [$00]
+        INC $00
+        PLA
+        STA [$00]
+        RTS
+
+
         
 ; slow down the game depending on how large the slowdown number is
 wait_slowdown:
@@ -1103,6 +1153,14 @@ wait_slowdown:
         
     .done:
         RTS
+
+reset_attempt_count:
+      LDA !spliced_run
+      CMP #$00
+      BEQ +
+      STZ !attempt_count
+
+    + RTS  
 
 ; draw the current dymeter to where it belongs on the screen
 display_dynmeter:

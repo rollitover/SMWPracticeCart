@@ -8,6 +8,7 @@ every_frame:
         SEP #$20
 ;       JSR stack_overflow
         JSR update_dropped_frames
+;        JSR attempt_counter
 ;       JSR check_kill
         
         LDA !in_overworld_menu
