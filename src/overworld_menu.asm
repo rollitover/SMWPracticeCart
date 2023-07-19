@@ -1644,7 +1644,7 @@ meter_editor_mode: ; w$5460
         LDA [!statusbar_layout_ptr],Y
         DEC A
         BPL +
-        LDA #$12 ; number of meters
+        LDA #$13 ; number of meters
       + STA [!statusbar_layout_ptr],Y
         LDA #$00
         INY
@@ -1694,7 +1694,7 @@ meter_editor_mode: ; w$5460
         TAY
         LDA [!statusbar_layout_ptr],Y
         INC A
-        CMP #$13 ; number of meters + 1
+        CMP #$14 ; number of meters + 1
         BNE +
         LDA #$00
       + STA [!statusbar_layout_ptr],Y
