@@ -9,7 +9,7 @@ level_finish:
         LDA #$01
         STA !freeze_timer_flag
         STA !level_finished
-        INC !completion_count
+        INC !streak_count
         LDA !spliced_run
         CMP #$00
         BNE +

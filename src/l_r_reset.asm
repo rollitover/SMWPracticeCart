@@ -19,6 +19,7 @@ activate_room_reset:
         LDY !recent_secondary_flag
         JSL set_global_exit
         JSR trigger_screen_exit
+        JSR set_reset_count
         
         LDA !restore_room_yoshi
         BEQ +
@@ -34,6 +35,8 @@ activate_room_reset:
         STA $1DF9 ; apu i/o
         
         RTL
+
+
         
 ; this code is run when the player buffers L + R upon level load or reset
 activate_midway_entrance:
@@ -61,6 +64,7 @@ activate_level_reset:
         LDY #$00
         JSL set_global_exit
         JSR trigger_screen_exit
+        JSR set_reset_count
         
         LDA.L !status_states
         CMP #$02
@@ -72,6 +76,12 @@ activate_level_reset:
         STA $1DF9 ; apu i/o
         
         RTL
+
+set_reset_count:
+        LDA !reset_count
+        INC A
+        STA !reset_count
+        RTS
         
 ; copy timer from apu and put it in the rng value and effective frame counter to shuffle them
 shuffle_rng_and_framerule:

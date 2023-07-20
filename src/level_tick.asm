@@ -1014,8 +1014,8 @@ meter_attempts:
 
     .attempt_type:
         dw .total
-        dw .best
-        dw .complete
+        dw .streak
+        dw .reset
 
 
     .total:
@@ -1057,7 +1057,7 @@ meter_attempts:
         
         RTS
 
-    .best:
+    .streak:
         LDA #$1C ; s
         STA [$00]
         INC $00
@@ -1082,7 +1082,7 @@ meter_attempts:
         LDA #$78 ; :
         STA [$00]
         INC $00
-        LDA !best_streaks_count ; mario speed
+        LDA !streak_count ; mario speed
       + JSL !_F+$00974C ; hex2dec
         PHA
         TXA
@@ -1094,20 +1094,20 @@ meter_attempts:
         STA [$00]
         RTS
 
-    .complete:
-        LDA #$0C ; c
+    .reset:
+        LDA #$FC ; null
         STA [$00]
         INC $00
-        LDA #$18 ; o
+        LDA #$FC ; null
         STA [$00]
         INC $00
-        LDA #$16 ; m
+        LDA #$1B ; r
         STA [$00]
         INC $00
-        LDA #$19 ; p
+        LDA #$0E ; e
         STA [$00]
         INC $00
-        LDA #$15 ; l
+        LDA #$1C ; s
         STA [$00]
         INC $00
         LDA #$0E ; e
@@ -1115,14 +1115,11 @@ meter_attempts:
         INC $00
         LDA #$1D ; t
         STA [$00]
-        INC $00
-        LDA #$0E ; e 
-        STA [$00]
-        INC $00
+        INC $00  
         LDA #$78 ; :
         STA [$00]
-        INC $00        
-        LDA !completion_count ; mario speed
+        INC $00    
+        LDA !reset_count ; mario speed
       + JSL !_F+$00974C ; hex2dec
         PHA
         TXA

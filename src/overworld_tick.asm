@@ -20,6 +20,7 @@ overworld_tick:
         JSR save_marios_position
 ;       JSR test_for_enter_level
         JSR draw_movie_slots
+        STZ !reset_count
         
         LDA #$40
         TSB $0D9F ; hdmaen mirror

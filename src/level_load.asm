@@ -175,7 +175,7 @@ setup_level_reset:
         STZ !record_used_yoshi
         STZ !record_used_orb
         STZ !record_lunar_dragon
-        STZ !completion_count
+        STZ !streak_count
         LDA !restore_level_xpos
         STA $D1 ; mario x position low byte
         LDA !restore_level_xpos+1

@@ -60,8 +60,8 @@
 
 ; attempt count
 !attempt_count               = $0DDB
-!completion_count            = $0DDC
-!best_streaks_count          = $0DDD
+!streak_count            = $0DDC
+!reset_count                 = $0DDD
 
 ; determines when to load state from different level
 !load_state_timer            = $0EF9
