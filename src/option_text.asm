@@ -299,8 +299,8 @@ meter_text_record:
         db "    VISUAL      "
         db "   NUMERIC      "
 meter_text_attempt:
-        db "     TOTAL      "
-        db "      BEST      "
+        db "      NONE      "
+        db "    STREAK      "
         db "  COMPLETE      "
 
 meter_description:
