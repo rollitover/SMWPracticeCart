@@ -2906,10 +2906,34 @@ draw_edited_status_bar:
         RTS
         
     .edited_attempt:
-        LDA #$2808
+        LDA #$2C1c
         STA [$00],Y
         INY #2
-        LDA #$2800
+        LDA #$2C1D
+        STA [$00],Y
+        INY #2
+        LDA #$2C1B
+        STA [$00],Y
+        INY #2
+        LDA #$2C0E
+        STA [$00],Y
+        INY #2
+        LDA #$2C0A
+        STA [$00],Y
+        INY #2
+        LDA #$2C14
+        STA [$00],Y
+        INY #2
+        LDA #$2C1C
+        STA [$00],Y
+        INY #2
+        LDA #$2C78
+        STA [$00],Y
+        INY #2
+        LDA #$38FC
+        STA [$00],Y
+        INY #2
+        LDA #$3800
         STA [$00],Y
         RTS
 
