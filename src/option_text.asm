@@ -241,7 +241,7 @@ meter_names:
         db "RECORD LIMIT    "
         db "MEMORY VIEWER   "
         db "MEMORY VIEWER   "
-        db "ATTEMPT COUNT   "
+        db "CAPE DIRECTION  "
 
 meter_types:
         dw meter_text_none
@@ -263,7 +263,7 @@ meter_types:
         dw meter_text_record
         dw meter_text_none
         dw meter_text_none
-        dw meter_text_attempt
+        dw meter_text_none
         
 meter_text_none:
         db "                "
@@ -298,10 +298,6 @@ meter_text_name:
 meter_text_record:
         db "    VISUAL      "
         db "   NUMERIC      "
-meter_text_attempt:
-        db "      NONE      "
-        db "    STREAK      "
-        db "  COMPLETE      "
 
 meter_description:
         db "                                "
@@ -380,7 +376,7 @@ meter_description:
         db "  WORK RAM AT THIS ADDRESS      "
         db "  OF BANK 7Fh                   "
         db "                                "
-        db "  DISPLAYS ATTEMPT COUNTER AND  "
-        db "  HOW MANY TIMES COMPLETED      "
-        db "                                "
+        db "  DISPLAYS THE DIRECTION OF     "
+        db "  CAPE INTERACTIVE HIT BOX      "
+        db "  ! THIS IS EXPRERIMENTAL !     "
         db "                                "

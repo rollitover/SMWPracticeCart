@@ -35,6 +35,7 @@ level_tick:
         JSR prepare_input
         JSR record_input
         JSR emulate_score_lag
+        JSR cape_interact_flag
         
         JSR fade_and_in_level_common
         
@@ -51,7 +52,6 @@ level_tick:
         JSR test_run_type
         JSR test_translevel_0_failsafe
         JSR wait_slowdown
-        JSR reset_attempt_count
         
     .done:
         PLB
@@ -98,6 +98,32 @@ endif
     
     .done:
         PLP
+        RTS
+
+cape_interact_flag:
+        LDA !cape_interaction
+        CMP #$00
+        BEQ .clear
+        LDA !cape_xpos_level
+        CMP $00D1
+        BCS .right
+
+      ;left
+        STZ !cape_interact_right
+        LDA #$01
+        STA !cape_interact_left
+        BRA .done
+
+    .right:
+        STZ !cape_interact_left
+        LDA #$01
+        STA !cape_interact_right
+        BRA .done
+    .clear:
+        STZ !cape_interact_left
+        STZ !cape_interact_right
+        
+    .done:
         RTS
 
 ; sad wrapper is sad
@@ -174,7 +200,7 @@ display_meters:
         dw meter_movie_recording
         dw meter_memory_7e
         dw meter_memory_7f
-        dw meter_attempts
+        dw meter_cape_interaction
     
     .meter_fade:
         dw .nothing
@@ -196,7 +222,7 @@ display_meters:
         dw .nothing
         dw meter_memory_7e
         dw meter_memory_7f
-        dw meter_attempts
+        dw meter_cape_interaction
 
 ; draw the item box meter (fixed position)
 meter_item_box:
@@ -1006,131 +1032,56 @@ rtc_unsupported_string:
         db $0D,$1D,$1B,$19,$1E,$1C,$17,$1E
 
 ; draw the real time clock meter
-meter_attempts:
+meter_cape_interaction:
+        BRA .main
         LDA [!statusbar_layout_ptr],Y
         ASL A
         TAX
         JMP (.attempt_type,X)
 
     .attempt_type:
-        dw .total
-        dw .streak
-        dw .reset
+        dw .main
 
-
-    .total:
+    .main:
+        LDA #$0C
+        STA [$00]
+        INC $00
         LDA #$0A
-        STA [$00]
-        INC $00
-        LDA #$1D
-        STA [$00]
-        INC $00
-        LDA #$1D
-        STA [$00]
-        INC $00
-        LDA #$0E
-        STA [$00]
-        INC $00
-        LDA #$16
         STA [$00]
         INC $00
         LDA #$19
         STA [$00]
         INC $00
-        LDA #$1D
+        LDA #$0E
         STA [$00]
         INC $00
-        LDA #$1C
+        LDA #$78
         STA [$00]
         INC $00
-        LDA #$78 ; :
+      .checkcape:
+        LDA !cape_interaction
+        CMP #$00
+        BEQ .none
+      .left:
+        LDA !cape_interact_left
+        CMP #$01
+        BNE .right
+        LDA #$15
         STA [$00]
-        INC $00        
-        LDA !attempt_count ; mario speed
-      + JSL !_F+$00974C ; hex2dec
-        PHA
-        TXA
+        BRA .done
+      .right:
+        LDA !cape_interact_right
+        CMP #$01
+        BNE .none
+        LDA #$1B
         STA [$00]
-        INC $00
-        PLA
-        STA [$00]
-        
+        BRA .done
+      .none:
+        LDA #$17
+        STA [$00]  
+      
+      .done:
         RTS
-
-    .streak:
-        LDA #$1C ; s
-        STA [$00]
-        INC $00
-        LDA #$1D ; t
-        STA [$00]
-        INC $00
-        LDA #$1B ; r
-        STA [$00]
-        INC $00
-        LDA #$0E ; e
-        STA [$00]
-        INC $00
-        LDA #$0A ; a
-        STA [$00]
-        INC $00
-        LDA #$14 ; k
-        STA [$00]
-        INC $00
-        LDA #$1C ; s
-        STA [$00]
-        INC $00
-        LDA #$78 ; :
-        STA [$00]
-        INC $00
-        LDA !streak_count ; mario speed
-      + JSL !_F+$00974C ; hex2dec
-        PHA
-        TXA
-        BNE +
-        LDA #$FC
-      + STA [$00]
-        INC $00
-        PLA
-        STA [$00]
-        RTS
-
-    .reset:
-        LDA #$FC ; null
-        STA [$00]
-        INC $00
-        LDA #$FC ; null
-        STA [$00]
-        INC $00
-        LDA #$1B ; r
-        STA [$00]
-        INC $00
-        LDA #$0E ; e
-        STA [$00]
-        INC $00
-        LDA #$1C ; s
-        STA [$00]
-        INC $00
-        LDA #$0E ; e
-        STA [$00]
-        INC $00
-        LDA #$1D ; t
-        STA [$00]
-        INC $00  
-        LDA #$78 ; :
-        STA [$00]
-        INC $00    
-        LDA !reset_count ; mario speed
-      + JSL !_F+$00974C ; hex2dec
-        PHA
-        TXA
-        BNE +
-        LDA #$FC
-      + STA [$00]
-        INC $00
-        PLA
-        STA [$00]
-        RTS
-
 
         
 ; slow down the game depending on how large the slowdown number is

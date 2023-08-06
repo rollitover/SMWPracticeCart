@@ -2388,7 +2388,7 @@ draw_edited_status_bar:
         dw .edited_movie_recording
         dw .edited_memory_7e
         dw .edited_memory_7f
-        dw .edited_attempt
+        dw .edited_cape_interaction
         
     .edited_item_box:
         LDA $03
@@ -2905,35 +2905,23 @@ draw_edited_status_bar:
         STA [$00],Y
         RTS
         
-    .edited_attempt:
-        LDA #$2C1c
+    .edited_cape_interaction:
+        LDA #$380C
         STA [$00],Y
         INY #2
-        LDA #$2C1D
+        LDA #$380A
         STA [$00],Y
         INY #2
-        LDA #$2C1B
+        LDA #$3819
         STA [$00],Y
         INY #2
-        LDA #$2C0E
+        LDA #$380E
         STA [$00],Y
         INY #2
-        LDA #$2C0A
+        LDA #$3878
         STA [$00],Y
         INY #2
-        LDA #$2C14
-        STA [$00],Y
-        INY #2
-        LDA #$2C1C
-        STA [$00],Y
-        INY #2
-        LDA #$2C78
-        STA [$00],Y
-        INY #2
-        LDA #$38FC
-        STA [$00],Y
-        INY #2
-        LDA #$3800
+        LDA #$2C15
         STA [$00],Y
         RTS
 

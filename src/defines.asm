@@ -60,8 +60,14 @@
 
 ; attempt count
 !attempt_count               = $0DDB
-!streak_count            = $0DDC
+!streak_count                = $0DDC
 !reset_count                 = $0DDD
+
+;cape interaction flags
+!cape_interaction            = $13E8
+!cape_xpos_level             = $13E9
+!cape_interact_left          = $0079 
+!cape_interact_right         = $007C
 
 ; determines when to load state from different level
 !load_state_timer            = $0EF9
