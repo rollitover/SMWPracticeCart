@@ -6,4 +6,5 @@ upload.html
 *.srm
 *.xml
 *.bps
+*.json
 TRANSFER.bat
